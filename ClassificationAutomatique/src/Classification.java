@@ -72,6 +72,9 @@ public class Classification {
             depeches.get(i).afficher();
         }
 
+        Categorie categorie = new Categorie("Sports");
+        categorie.initLexique("./lexiques/SPORTS");
+
     }
 
 

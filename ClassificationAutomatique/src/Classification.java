@@ -1,16 +1,12 @@
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class Classification {
 
-
     private static ArrayList<Depeche> lectureDepeches(String nomFichier) {
-        //creation d'un tableau de dépêches
+        // creation d'un tableau de dépêches
         ArrayList<Depeche> depeches = new ArrayList<>();
         try {
             // lecture du fichier d'entrée
@@ -43,22 +39,34 @@ public class Classification {
     }
 
 
+	public static ArrayList<PaireChaineEntier> initDico(ArrayList<Depeche> depeches, String categorie) {
+		ArrayList<PaireChaineEntier> resultat = new ArrayList<>();
+		return resultat;
+
+    }
     public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories, String nomFichier) {
         ArrayList<PaireChaineEntier> result = new ArrayList<>();
         for(int i = 0; i < categories.size(); ++i){
-            for(int j = 0; j < depeches.size(); ++i){
-                    result.add(new PaireChaineEntier(categories.get(i).getNom(), 0));                    
+            result.add(new PaireChaineEntier());
+            result.get(result.size()-1).setChaine(categories.get(i).getNom());
+        }
+        for (int i = 0; i < depeches.size(); i++) {
+            for (int j = 0; j < result.size()-1; j++) {
+                // Comparer les noms des catégories
+                if (result.get(j).getChaine().equals(categories.get(i).getNom())) {
+                    // Mettre à jour le nombre associé à la catégorie
+                    result.get(j).setEntier(result.get(j).getEntier() + 1);
                 }
             }
         }
+        for(int i = 0; i < 5; ++i){
+            System.out.println(result.get(i).getChaine());
+            System.out.println(result.get(i).getEntier());
+        }
     }
 
-
-    public static ArrayList<PaireChaineEntier> initDico(ArrayList<Depeche> depeches, String categorie) {
-        ArrayList<PaireChaineEntier> resultat = new ArrayList<>();
-        return resultat;
-
-    }
+    
+	
 
     public static void calculScores(ArrayList<Depeche> depeches, String categorie, ArrayList<PaireChaineEntier> dictionnaire) {
     }
@@ -81,63 +89,20 @@ public class Classification {
             depeches.get(i).afficher();
         }
 
-        Categorie culture = new Categorie("Culture");
-        culture.initLexique("./lexiques/CULTURE");
-        Categorie economie = new Categorie("Economie");
-        economie.initLexique("./lexiques/ECONOMIE");
-        Categorie environnement = new Categorie("Environnement");
-        environnement.initLexique("./lexiques/ENVIRONNEMENT-SCIENCES");
-        Categorie polithique = new Categorie("Polithique");
-        polithique.initLexique("./lexiques/POLITHIQUE");
-        Categorie sport = new Categorie("Sport");
-        sport.initLexique("./lexiques/SPORTS");
+        ArrayList<Categorie> categories = new ArrayList<>();
+		categories.add(new Categorie("Culture", "./lexiques/CULTURE"));
+		categories.add(new Categorie("Economie", "./lexiques/ECONOMIE"));
+		categories.add(new Categorie("Environnement-Sciences", "./lexiques/ENVIRONNEMENT-SCIENCES"));
+		categories.add(new Categorie("Polithique", "./lexiques/POLITHIQUE"));
+		categories.add(new Categorie("Sport", "./lexiques/SPORTS"));
 
-        Categorie categorie = new Categorie("Environement-sciences");
-        categorie.initLexique("./lexiques/ENVIRONNEMENT-SCIENCES");
-        System.out.println("Score de la dépêche 0 pour la catégorie Sports : " + categorie.score(depeches.get(0)));
-        
-        System.out.println(UtilitairePaireChaineEntier.entierPourChaine(sport.getLexique(), "amuser"));
-        
-        int i = 0;
-        List<PaireChaineEntier> resultats = new ArrayList<>();
-
-        while (i < depeches.size()) {
-            String categorie = depeches.get(i).getCategorie();
-            int score = 0;
-
-            while (i < depeches.size() && depeches.get(i).getCategorie().equals(categorie)) {
-                switch (categorie) {
-                    case "ENVIRONNEMENT-SCIENCES":
-                        score += environnement.score(depeches.get(i));
-                        break;
-                    case "CULTURE":
-                        score += culture.score(depeches.get(i));
-                        break;
-                    case "ECONOMIE":
-                        score += economie.score(depeches.get(i));
-                        break;
-                    case "POLITIQUE":
-                        score += polithique.score(depeches.get(i));
-                        break;
-                    case "SPORTS":
-                        score += sport.score(depeches.get(i));
-                        break;
-                    // Ajoutez d'autres catégories au besoin
-                }
-                ++i;
-            }
-
-            PaireChaineEntier paire = new PaireChaineEntier();
-            paire.setChaine(categorie);
-            paire.setEntier(score);
-            resultats.add(paire);
-        }
-
-        System.out.println(resultats.get(0).getChaine());
-
-        
-    }
-
+        ArrayList<PaireChaineEntier> catt = new ArrayList<>();
+		for (int i = 0; i < categories.size(); i++) {
+			catt.add(new PaireChaineEntier(categories.get(2).getNom(), categories.get(2).score(depeches.get(i))));
+		}
+		System.out.println("categorie de la depeche 2: ");
+		System.out.println(UtilitairePaireChaineEntier.chaineMax(catt));
+        classementDepeches(depeches, categories, null);
+	}
 
 }
-

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Classification {
@@ -89,7 +90,45 @@ public class Classification {
         
 
         System.out.println(UtilitairePaireChaineEntier.entierPourChaine(sport.getLexique(), "amuser"));
+        
+        int i = 0;
+        List<PaireChaineEntier> resultats = new ArrayList<>();
 
+        while (i < depeches.size()) {
+            String categorie = depeches.get(i).getCategorie();
+            int score = 0;
+
+            while (i < depeches.size() && depeches.get(i).getCategorie().equals(categorie)) {
+                switch (categorie) {
+                    case "ENVIRONNEMENT-SCIENCES":
+                        score += environnement.score(depeches.get(i));
+                        break;
+                    case "CULTURE":
+                        score += culture.score(depeches.get(i));
+                        break;
+                    case "ECONOMIE":
+                        score += economie.score(depeches.get(i));
+                        break;
+                    case "POLITIQUE":
+                        score += polithique.score(depeches.get(i));
+                        break;
+                    case "SPORTS":
+                        score += sport.score(depeches.get(i));
+                        break;
+                    // Ajoutez d'autres catégories au besoin
+                }
+                ++i;
+            }
+
+            PaireChaineEntier paire = new PaireChaineEntier();
+            paire.setChaine(categorie);
+            paire.setEntier(score);
+            resultats.add(paire);
+        }
+
+        System.out.println(resultats.get(0).getChaine());
+
+        
     }
 
 

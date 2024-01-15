@@ -28,17 +28,16 @@ public class Categorie {
     public void initLexique(String nomFichier) {
         try{
             //lecture du fichier d'entrée
-            FileInputStream file = new FileInputStream(nomFichier);
-            Scanner scanner = new Scanner(file);
+            final FileInputStream file = new FileInputStream(nomFichier);
+            final Scanner scanner = new Scanner(file);
 
             while(scanner.hasNextLine()){
-                String ligne = scanner.nextLine();
-                int index = ligne.indexOf(":");
-                String chaine = ligne.substring(0, index);
-                int note = Integer.parseInt(ligne.substring(index + 1).trim());
-                PaireChaineEntier paireChaineEntier = new PaireChaineEntier();
-                PaireChaineEntier paire = new PaireChaineEntier();
-                paire.setChaine(chaine);
+                final String ligne = scanner.nextLine();
+                final int index = ligne.indexOf(":");
+                final String chaine = ligne.substring(0, index);
+                final int note = Integer.parseInt(ligne.substring(index + 1).trim());
+                final PaireChaineEntier paire = new PaireChaineEntier();
+                paire.setChaine(chaine.toLowerCase());
                 paire.setEntier(note);
                 lexique.add(paire);
             }
@@ -52,8 +51,14 @@ public class Categorie {
 
     //calcul du score d'une dépêche pour la catégorie
     public int score(Depeche d) {
-        return 0;
+        int score = 0;
+        for(int i=0 ; i < lexique.size() ; i++){
+            for (int j = 0; j < d.getMots().size(); j++) {
+                System.out.println(lexique.get(i).getChaine()+'='+d.getMots().get(j));
+                if(lexique.get(i).getChaine().equals(d.getMots().get(j)))
+                    score+= lexique.get(i).getEntier();
+            }
+        }
+        return score;
     }
-
-
 }

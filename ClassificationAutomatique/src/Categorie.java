@@ -52,7 +52,13 @@ public class Categorie {
 
     //calcul du score d'une dépêche pour la catégorie
     public int score(Depeche d) {
-        return 0;
+        int score = 0;
+        for(int i=0;i<lexique.size();i++){
+            if(d.getMots().contains(lexique.get(i)).getChaine()){
+                score+= lexique.get(i).getEntier();
+            }
+        }
+        return score;
     }
 
 

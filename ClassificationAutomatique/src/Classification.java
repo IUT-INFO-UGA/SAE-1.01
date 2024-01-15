@@ -72,8 +72,10 @@ public class Classification {
             depeches.get(i).afficher();
         }
 
-        Categorie categorie = new Categorie("Sports");
-        categorie.initLexique("./lexiques/SPORTS");
+        Categorie categorie = new Categorie("Environement-sciences");
+        categorie.initLexique("./lexiques/ENVIRONNEMENT-SCIENCES");
+
+        System.out.println("Score de la dépêche 0 pour la catégorie Sports : " + categorie.score(depeches.get(0)));
 
         System.out.println(UtilitairePaireChaineEntier.entierPourChaine(categorie.getLexique(), "amuser"));
 

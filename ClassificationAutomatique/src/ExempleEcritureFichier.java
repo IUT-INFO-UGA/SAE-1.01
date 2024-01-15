@@ -7,11 +7,11 @@ public class ExempleEcritureFichier
 
     public static void main(String[] args) {
 
-        Scanner lecteur = new Scanner((System.in));
+        final Scanner lecteur = new Scanner((System.in));
         System.out.println("entrez votre nom :");
-        String s= lecteur.nextLine();
+        final String s= lecteur.nextLine();
         try {
-            FileWriter file = new FileWriter("fichier-sortie.txt");
+            final FileWriter file = new FileWriter("fichier-sortie.txt");
             file.write("chaine saisie :\n");
             file.write(s+"\n");
             file.close();
@@ -19,6 +19,7 @@ public class ExempleEcritureFichier
         } catch (IOException e) {
             e.printStackTrace();
         }
+        lecteur.close();
     }
 
 }

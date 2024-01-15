@@ -4,6 +4,10 @@ public class UtilitairePaireChaineEntier {
 
 
     public static int indicePourChaine(ArrayList<PaireChaineEntier> listePaires, String chaine) {
+        int i = 0;
+        while(i < listePaires.size() && listePaires.get(i).getChaine().compareTo(chaine) != 0){
+            i++;
+        }
         return 0;
     }
 

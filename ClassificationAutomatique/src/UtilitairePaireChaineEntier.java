@@ -12,7 +12,6 @@ public class UtilitairePaireChaineEntier {
         int entier = 0;
         System.out.println(listePaires.size());
         while(i < listePaires.size()){
-            System.out.println(listePaires.get(i).getChaine());
             if(listePaires.get(i).getChaine().compareTo(chaine) == 0){
                 entier = listePaires.get(i).getEntier();
             }
@@ -29,7 +28,8 @@ public class UtilitairePaireChaineEntier {
                 entier_max = listePaires.get(i).getEntier();
                 chaine_max = listePaires.get(i).getChaine();
             }
-        }return chaine_max;
+        }
+        return chaine_max;
     }
 
 

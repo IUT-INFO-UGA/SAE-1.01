@@ -1,9 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Classification {
@@ -85,9 +83,10 @@ public class Classification {
         Categorie sport = new Categorie("Sport");
         sport.initLexique("./lexiques/SPORTS");
 
-        ArrayList<Categorie> categories = new ArrayList<>(Arrays.asList(culture, economie, environnement, polithique, sport));
+        Categorie categorie = new Categorie("Environement-sciences");
+        categorie.initLexique("./lexiques/ENVIRONNEMENT-SCIENCES");
+        System.out.println("Score de la dépêche 0 pour la catégorie Sports : " + categorie.score(depeches.get(0)));
         
-
         System.out.println(UtilitairePaireChaineEntier.entierPourChaine(sport.getLexique(), "amuser"));
 
     }

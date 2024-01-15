@@ -13,6 +13,12 @@ public class Categorie {
         this.nom = nom;
     }
 
+    // constructeur fonctionnel
+    public Categorie(String nom, String nomFichier) {
+        this.nom = nom;
+        initLexique(nomFichier);
+    }
+
     public String getNom() {
         return nom;
     }

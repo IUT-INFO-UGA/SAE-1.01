@@ -52,11 +52,8 @@ public class Categorie {
     //calcul du score d'une dépêche pour la catégorie
     public int score(Depeche d) {
         int score = 0;
-        for(int i=0 ; i < lexique.size() ; i++){
-            for (int j = 0; j < d.getMots().size(); j++) {
-                if(lexique.get(i).getChaine().equals(d.getMots().get(j)))
-                    score+= lexique.get(i).getEntier();
-            }
+        for(int i=0 ; i < d.getMots().size(); i++){
+            score+=UtilitairePaireChaineEntier.entierPourChaine(lexique,d.getMots().get(i));
         }
         return score;
     }

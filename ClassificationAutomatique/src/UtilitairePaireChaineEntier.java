@@ -4,7 +4,11 @@ public class UtilitairePaireChaineEntier {
 
 
     public static int indicePourChaine(ArrayList<PaireChaineEntier> listePaires, String chaine) {
-        return 0;
+        int i = 0;
+        while(i < listePaires.size() && listePaires.get(i).getChaine().compareTo(chaine) != 0){
+            i++;
+        }
+        return i;
     }
 
     public static int entierPourChaine(ArrayList<PaireChaineEntier> listePaires, String chaine) {
@@ -12,7 +16,6 @@ public class UtilitairePaireChaineEntier {
         int entier = 0;
         System.out.println(listePaires.size());
         while(i < listePaires.size()){
-            System.out.println(listePaires.get(i).getChaine());
             if(listePaires.get(i).getChaine().compareTo(chaine) == 0){
                 entier = listePaires.get(i).getEntier();
             }
@@ -29,12 +32,17 @@ public class UtilitairePaireChaineEntier {
                 entier_max = listePaires.get(i).getEntier();
                 chaine_max = listePaires.get(i).getChaine();
             }
-        }return chaine_max;
+        }
+        return chaine_max;
     }
 
 
     public static float moyenne(ArrayList<PaireChaineEntier> listePaires) {
-        return 0;
+        int somme = 0;
+        for(int i = 0; i < listePaires.size(); ++i){
+            somme += listePaires.get(i).getEntier();
+        }
+        return somme / listePaires.size();
     }
 
 }

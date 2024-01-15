@@ -9,7 +9,7 @@ public class ExempleEcritureFichier
 
         final Scanner lecteur = new Scanner((System.in));
         System.out.println("entrez votre nom :");
-        final String s= lecteur.nextLine();
+        final String s = lecteur.nextLine();
         try {
             final FileWriter file = new FileWriter("fichier-sortie.txt");
             file.write("chaine saisie :\n");

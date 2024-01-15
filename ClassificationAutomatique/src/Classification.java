@@ -44,6 +44,13 @@ public class Classification {
 
 
     public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories, String nomFichier) {
+        ArrayList<PaireChaineEntier> result = new ArrayList<>();
+        for(int i = 0; i < categories.size(); ++i){
+            for(int j = 0; j < depeches.size(); ++i){
+                    result.add(new PaireChaineEntier(categories.get(i).getNom(), 0));                    
+                }
+            }
+        }
     }
 
 

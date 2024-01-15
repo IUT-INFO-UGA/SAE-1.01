@@ -1,7 +1,9 @@
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Classification {
@@ -72,12 +74,21 @@ public class Classification {
             depeches.get(i).afficher();
         }
 
-        Categorie categorie = new Categorie("Environement-sciences");
-        categorie.initLexique("./lexiques/ENVIRONNEMENT-SCIENCES");
+        Categorie culture = new Categorie("Culture");
+        culture.initLexique("./lexiques/CULTURE");
+        Categorie economie = new Categorie("Economie");
+        economie.initLexique("./lexiques/ECONOMIE");
+        Categorie environnement = new Categorie("Environnement");
+        environnement.initLexique("./lexiques/ENVIRONNEMENT-SCIENCES");
+        Categorie polithique = new Categorie("Polithique");
+        polithique.initLexique("./lexiques/POLITHIQUE");
+        Categorie sport = new Categorie("Sport");
+        sport.initLexique("./lexiques/SPORTS");
 
-        System.out.println("Score de la dépêche 0 pour la catégorie Sports : " + categorie.score(depeches.get(0)));
+        ArrayList<Categorie> categories = new ArrayList<>(Arrays.asList(culture, economie, environnement, polithique, sport));
+        
 
-        System.out.println(UtilitairePaireChaineEntier.entierPourChaine(categorie.getLexique(), "amuser"));
+        System.out.println(UtilitairePaireChaineEntier.entierPourChaine(sport.getLexique(), "amuser"));
 
     }
 

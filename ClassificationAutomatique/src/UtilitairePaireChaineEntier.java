@@ -22,7 +22,14 @@ public class UtilitairePaireChaineEntier {
     }
 
     public static String chaineMax(ArrayList<PaireChaineEntier> listePaires) {
-        return "SPORTS";
+        int entier_max = 0;
+        String chaine_max = "";
+        for(int i = 0; i < listePaires.size(); ++i){
+            if(listePaires.get(i).getEntier() > entier_max){
+                entier_max = listePaires.get(i).getEntier();
+                chaine_max = listePaires.get(i).getChaine();
+            }
+        }return chaine_max;
     }
 
 

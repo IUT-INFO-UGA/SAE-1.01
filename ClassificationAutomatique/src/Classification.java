@@ -75,6 +75,8 @@ public class Classification {
         Categorie categorie = new Categorie("Sports");
         categorie.initLexique("./lexiques/SPORTS");
 
+        System.out.println(UtilitairePaireChaineEntier.entierPourChaine(categorie.getLexique(), "amuser"));
+
     }
 
 

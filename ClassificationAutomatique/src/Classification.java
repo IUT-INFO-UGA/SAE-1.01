@@ -46,7 +46,7 @@ public class Classification {
 
     }
     public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories, String nomFichier) {
-		ArrayList<Categorie> Categories = new ArrayList<>();
+		/*ArrayList<Categorie> Categories = new ArrayList<>();
 		Categories.add(new Categorie("Culture", "./lexiques/CULTURE"));
 		Categories.add(new Categorie("Economie", "./lexiques/ECONOMIE"));
 		Categories.add(new Categorie("Environnement-Sciences", "./lexiques/ENVIRONNEMENT-SCIENCES"));
@@ -58,9 +58,8 @@ public class Classification {
 			catt.add(new PaireChaineEntier(Categories.get(2).getNom(), Categories.get(2).score(depeches.get(i))));
 		}
 		for (int i = 0; i < Categories.size(); i++) {
-			
 			System.out.println(catt.get(i).getEntier());
-		}
+		}*/
 		try{
 			final FileWriter file = new FileWriter("nomFichier.txt");
 		

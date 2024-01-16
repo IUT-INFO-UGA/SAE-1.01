@@ -42,10 +42,17 @@ public class Classification {
     }
 
     public static ArrayList<PaireChaineEntier> initDico(ArrayList<Depeche> depeches, String categorie) {
-        ArrayList<PaireChaineEntier> resultat = new ArrayList<>();
-        return resultat;
-
-    }
+		ArrayList<PaireChaineEntier> resultat = new ArrayList<>();
+		for (int i = 0; i < depeches.size(); ++i) {
+			if (depeches.get(i).getCategorie().equals(categorie)) {
+				for (int j = 0; j < depeches.get(i).getMots().size(); ++j) {
+					if (UtilitairePaireChaineEntier.indicePourChaine(resultat, depeches.get(i).getMots().get(j)) == -1)
+						resultat.add(new PaireChaineEntier(depeches.get(i).getMots().get(j), 0));
+				}
+			}
+		}
+		return resultat;
+	}
 
     public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories,
             String nomFichier) {

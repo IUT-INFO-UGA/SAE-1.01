@@ -1,5 +1,7 @@
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -88,11 +90,33 @@ public class Classification {
 	}
 
 	public static int poidsPourScore(int score) {
-		return 0;
+		if (score < 0)
+			return 0;
+		else if (score < 20)
+			return 1;
+		else if (score < 30)
+			return 2;
+		else
+			return 3;
 	}
 
-	public static void generationLexique(ArrayList<Depeche> depeches, String categorie, String nomFichier) {
-
+	public static void generationLexique(ArrayList<Depeche> depeches, String categorieName, String nomFichier) {
+		final ArrayList<PaireChaineEntier> dico = initDico(depeches, categorieName);
+		calculScores(depeches, categorieName, dico);
+		for (int i = 0; i < dico.size(); ++i) {
+			dico.get(i).setEntier(poidsPourScore(dico.get(i).getEntier()));
+		}
+		// Ecriture du fichier
+		try {
+			FileOutputStream file = new FileOutputStream(nomFichier);
+			PrintWriter pw = new PrintWriter(file);
+			for (int i = 0; i < dico.size(); ++i) {
+				pw.println(dico.get(i).getChaine() + " : " + dico.get(i).getEntier());
+			}
+			pw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -113,7 +137,7 @@ public class Classification {
 		categories.add(new Categorie("Sport", "./lexiques/SPORTS"));
 
 		ArrayList<PaireChaineEntier> catt = new ArrayList<>();
-		for (int i = 0; i < categories.size(); i++) {
+		for (int i = 0; i < depeches.size(); i++) {
 			catt.add(new PaireChaineEntier(categories.get(2).getNom(), categories.get(2).score(depeches.get(i))));
 		}
 		System.out.println("categorie de la depeche 2: ");

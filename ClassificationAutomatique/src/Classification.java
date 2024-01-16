@@ -1,4 +1,5 @@
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -45,24 +46,37 @@ public class Classification {
 
     }
     public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories, String nomFichier) {
-        ArrayList<PaireChaineEntier> result = new ArrayList<>();
-        for(int i = 0; i < categories.size(); ++i){
-            result.add(new PaireChaineEntier());
-            result.get(result.size()-1).setChaine(categories.get(i).getNom());
-        }
-        for (int i = 0; i < depeches.size(); i++) {
-            for (int j = 0; j < result.size()-1; j++) {
-                // Comparer les noms des catégories
-                if (result.get(j).getChaine().equals(categories.get(i).getNom())) {
-                    // Mettre à jour le nombre associé à la catégorie
-                    result.get(j).setEntier(result.get(j).getEntier() + 1);
-                }
-            }
-        }
-        for(int i = 0; i < 5; ++i){
-            System.out.println(result.get(i).getChaine());
-            System.out.println(result.get(i).getEntier());
-        }
+		ArrayList<Categorie> Categories = new ArrayList<>();
+		Categories.add(new Categorie("Culture", "./lexiques/CULTURE"));
+		Categories.add(new Categorie("Economie", "./lexiques/ECONOMIE"));
+		Categories.add(new Categorie("Environnement-Sciences", "./lexiques/ENVIRONNEMENT-SCIENCES"));
+		Categories.add(new Categorie("Polithique", "./lexiques/POLITHIQUE"));
+		Categories.add(new Categorie("Sport", "./lexiques/SPORTS"));
+
+        ArrayList<PaireChaineEntier> catt = new ArrayList<>();
+		for (int i = 0; i < Categories.size(); i++) {
+			catt.add(new PaireChaineEntier(Categories.get(2).getNom(), Categories.get(2).score(depeches.get(i))));
+		}
+		for (int i = 0; i < Categories.size(); i++) {
+			
+			System.out.println(catt.get(i).getEntier());
+		}
+		try{
+			final FileWriter file = new FileWriter("nomFichier.txt");
+		
+			for(int i = 0; i < depeches.size(); ++i){
+				
+				file.write(depeches.get(i).getId() + ":" + depeches.get(i).getCategorie() + "\n");
+				
+				
+			}
+			
+			file.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		
+        
     }
 
     

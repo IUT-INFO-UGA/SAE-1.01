@@ -42,4 +42,16 @@ public class UtilitairePaireChaineEntier {
 		return somme / listePaires.size();
 	}
 
+	public static int indexOf(ArrayList<PaireChaineEntier> listePaires, String chaine) {
+		int i = 0;
+		while (i < listePaires.size() && listePaires.get(i).getChaine().compareTo(chaine) != 0) {
+			i++;
+		}
+		if (i < listePaires.size()) {
+			return i;
+		} else {
+			return -1;
+		}
+	}
+
 }

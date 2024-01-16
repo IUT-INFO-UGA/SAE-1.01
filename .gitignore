@@ -23,3 +23,8 @@
 hs_err_pid*
 replay_pid*
 ClassificationAutomatique/testClassment.txt
+ClassificationAutomatique/lexiques/CULTURETest
+ClassificationAutomatique/lexiques/ECONOMIETest
+ClassificationAutomatique/lexiques/ENVIRONNEMENT-SCIENCESTest
+ClassificationAutomatique/lexiques/POLITIQUETest
+ClassificationAutomatique/lexiques/SPORTSTest

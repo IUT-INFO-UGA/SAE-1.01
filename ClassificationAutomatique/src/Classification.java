@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Classification {
@@ -36,7 +38,8 @@ public class Classification {
             }
             scanner.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de l'écriture du fichier " + nomFichier);
+
         }
         return depeches;
     }
@@ -56,38 +59,48 @@ public class Classification {
 
     public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories,
             String nomFichier) {
-        /*
-         * ArrayList<Categorie> Categories = new ArrayList<>();
-         * Categories.add(new Categorie("Culture", "./lexiques/CULTURE"));
-         * Categories.add(new Categorie("Economie", "./lexiques/ECONOMIE"));
-         * Categories.add(new Categorie("Environnement-Sciences",
-         * "./lexiques/ENVIRONNEMENT-SCIENCES"));
-         * Categories.add(new Categorie("Polithique", "./lexiques/POLITHIQUE"));
-         * Categories.add(new Categorie("Sport", "./lexiques/SPORTS"));
-         * 
-         * ArrayList<PaireChaineEntier> catt = new ArrayList<>();
-         * for (int i = 0; i < Categories.size(); i++) {
-         * catt.add(new PaireChaineEntier(Categories.get(2).getNom(),
-         * Categories.get(2).score(depeches.get(i))));
-         * }
-         * for (int i = 0; i < Categories.size(); i++) {
-         * System.out.println(catt.get(i).getEntier());
-         * }
-         */
-        try {
-            final FileWriter file = new FileWriter("nomFichier.txt");
-
-            for (int i = 0; i < depeches.size(); ++i) {
-
-                file.write(depeches.get(i).getId() + ":" + depeches.get(i).getCategorie() + "\n");
-
+        String out = "";
+        ArrayList<PaireChaineEntier> detected = new ArrayList<>();
+        for (int i = 0; i < depeches.size(); i++) {
+            PaireChaineEntier max = new PaireChaineEntier("no data", -1);
+            for (int j = 0; j < categories.size(); j++) {
+                final PaireChaineEntier tmp = new PaireChaineEntier(categories.get(j).getNom(),
+                        categories.get(j).score(depeches.get(i)));
+                if (tmp.getEntier() > max.getEntier()) {
+                    max = tmp;
+                }
             }
-
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            final PaireChaineEntier selectCat = max;
+            out += "Depeche " + i + " : " + selectCat.getChaine() + "\n";
+            if (depeches.get(i).getCategorie().equals(selectCat.getChaine())) {
+                int h = 0;
+                while (h < detected.size() && detected.get(h).getChaine() != selectCat.getChaine()) {
+                    h++;
+                }
+                if (h < detected.size()) {
+                    detected.get(h).setEntier(detected.get(h).getEntier() + 1);
+                } else {
+                    detected.add(new PaireChaineEntier(selectCat.getChaine(), 1));
+                }
+            }
         }
-
+        out += "\n\n";
+        int total = 0;
+        int nbCatt = 0;
+        while (nbCatt < detected.size()) {
+            out += detected.get(nbCatt).getChaine() + " : " + detected.get(nbCatt).getEntier() + "\n";
+            total += detected.get(nbCatt).getEntier();
+            nbCatt++;
+        }
+        out += "Total : " + total / nbCatt + "\n";
+        try {
+            FileOutputStream file = new FileOutputStream(nomFichier);
+            PrintWriter pw = new PrintWriter(file);
+            pw.println(out);
+            pw.close();
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'écriture du fichier " + nomFichier);
+        }
     }
 
     public static void calculScores(ArrayList<Depeche> depeches, String categorie,
@@ -129,7 +142,7 @@ public class Classification {
             }
             pw.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de l'écriture du fichier " + nomFichier);
         }
     }
 
@@ -144,11 +157,11 @@ public class Classification {
         }
 
         ArrayList<Categorie> categories = new ArrayList<>();
-        categories.add(new Categorie("Culture", "./lexiques/CULTURE"));
-        categories.add(new Categorie("Economie", "./lexiques/ECONOMIE"));
-        categories.add(new Categorie("Environnement-Sciences", "./lexiques/ENVIRONNEMENT-SCIENCES"));
-        categories.add(new Categorie("Polithique", "./lexiques/POLITHIQUE"));
-        categories.add(new Categorie("Sport", "./lexiques/SPORTS"));
+        categories.add(new Categorie("CULTURE", "./lexiques/CULTURE"));
+        categories.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE"));
+        categories.add(new Categorie("ENVIRONNEMENT-SCIENCES", "./lexiques/ENVIRONNEMENT-SCIENCES"));
+        categories.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE"));
+        categories.add(new Categorie("SPORTS", "./lexiques/SPORTS"));
 
         ArrayList<PaireChaineEntier> catt = new ArrayList<>();
         for (int i = 0; i < depeches.size(); i++) {
@@ -156,7 +169,8 @@ public class Classification {
         }
         System.out.println("categorie de la depeche 2: ");
         System.out.println(UtilitairePaireChaineEntier.chaineMax(catt));
-        classementDepeches(depeches, categories, null);
+
+        classementDepeches(depeches, categories, "testClassment.txt");
     }
 
 }

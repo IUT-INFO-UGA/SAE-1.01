@@ -47,7 +47,8 @@ public class Categorie {
             }
             scanner.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de l'écriture du fichier " + nomFichier);
+
         }
     }
 

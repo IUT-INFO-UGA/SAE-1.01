@@ -1,12 +1,11 @@
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Categorie {
 
-    private String nom; // le nom de la catégorie p.ex : sport, politique,...
-    private ArrayList<PaireChaineEntier> lexique = new ArrayList<>(); // le lexique de la catégorie
+    final private String nom; // le nom de la catégorie p.ex : sport, politique,...
+    final private SortedArray lexique = new SortedArray(); // le lexique de la catégorie
 
     // constructeur
     public Categorie(String nom) {
@@ -23,7 +22,7 @@ public class Categorie {
         return nom;
     }
 
-    public ArrayList<PaireChaineEntier> getLexique() {
+    public SortedArray getLexique() {
         return lexique;
     }
 
@@ -43,7 +42,7 @@ public class Categorie {
                 final PaireChaineEntier paire = new PaireChaineEntier();
                 paire.setChaine(chaine.toLowerCase());
                 paire.setEntier(note);
-                lexique.add(paire);
+                lexique.addSorted(paire);
             }
             scanner.close();
         } catch (IOException e) {
@@ -55,8 +54,10 @@ public class Categorie {
     // calcul du score d'une dépêche pour la catégorie
     public int score(Depeche d) {
         int score = 0;
-        for (int i = 0; i < d.getMots().size(); i++) {
-            score += UtilitairePaireChaineEntier.entierPourChaine(lexique, d.getMots().get(i));
+        for (final String mot : d.getMots()) {
+            try {
+                score += lexique.get(mot).getEntier();
+            } catch (ArrayIndexOutOfBoundsException ignored){}
         }
         return score;
     }

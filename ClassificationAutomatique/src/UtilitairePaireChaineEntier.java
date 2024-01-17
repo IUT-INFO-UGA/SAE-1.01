@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class UtilitairePaireChaineEntier {
 
-	public static int indicePourChaine(ArrayList<PaireChaineEntier> listePaires, String chaine) {
+	public static int indicePourChaine(SortedArray listePaires, String chaine) {
 		int i = -1;
 		for (int j = 0; j < listePaires.size(); ++j) {
 			if (listePaires.get(j).getChaine().compareTo(chaine) == 0) {
@@ -12,19 +12,11 @@ public class UtilitairePaireChaineEntier {
 		return i;
 	}
 
-	public static int entierPourChaine(ArrayList<PaireChaineEntier> listePaires, String chaine) {
-		int i = 0;
-		int entier = 0;
-		while (i < listePaires.size()) {
-			if (listePaires.get(i).getChaine().compareTo(chaine) == 0) {
-				entier = listePaires.get(i).getEntier();
-			}
-			i++;
-		}
-		return entier;
+	public static int entierPourChaine(SortedArray listePaires, String chaine) {
+		return listePaires.get(chaine).getEntier();
 	}
 
-	public static String chaineMax(ArrayList<PaireChaineEntier> listePaires) {
+	public static String chaineMax(SortedArray listePaires) {
 		PaireChaineEntier max = listePaires.get(0);
 		for (int i = 0; i < listePaires.size(); ++i) {
 			if (listePaires.get(i).getEntier() > max.getEntier()) {
@@ -34,8 +26,11 @@ public class UtilitairePaireChaineEntier {
 		return max.getChaine();
 	}
 
-	public static float moyenne(ArrayList<PaireChaineEntier> listePaires) {
+	public static float moyenne(SortedArray listePaires) {
 		int somme = 0;
+		if(listePaires.size() == 0) {
+			return 0;
+		}
 		for (int i = 0; i < listePaires.size(); ++i) {
 			somme += listePaires.get(i).getEntier();
 		}
@@ -52,7 +47,7 @@ public class UtilitairePaireChaineEntier {
  * PaireChaineEntier objects. If the string is found, the method returns the index. If the string is not found, the method
  * returns -1.
  */
-	public static int indexOf(ArrayList<PaireChaineEntier> listePaires, String chaine) {
+	public static int indexOf(SortedArray listePaires, String chaine) {
 		int i = 0;
 		while (i < listePaires.size() && listePaires.get(i).getChaine().compareTo(chaine) != 0) {
 			i++;

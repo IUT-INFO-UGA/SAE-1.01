@@ -28,3 +28,11 @@ ClassificationAutomatique/lexiques/ECONOMIETest
 ClassificationAutomatique/lexiques/ENVIRONNEMENT-SCIENCESTest
 ClassificationAutomatique/lexiques/POLITIQUETest
 ClassificationAutomatique/lexiques/SPORTSTest
+ClassificationAutomatique/lexiques/CULTURE_Test.txt
+ClassificationAutomatique/lexiques/CULTURE_Test.txt
+ClassificationAutomatique/lexiques/CULTURE_Test.txt
+ClassificationAutomatique/lexiques/ECONOMIE_Test.txt
+ClassificationAutomatique/lexiques/ENVIRONNEMENT-SCIENCES_Test.txt
+ClassificationAutomatique/lexiques/POLITIQUE_Test.txt
+ClassificationAutomatique/lexiques/SPORTS_Test.txt
+*.txt

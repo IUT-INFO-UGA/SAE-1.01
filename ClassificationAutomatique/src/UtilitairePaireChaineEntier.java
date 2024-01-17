@@ -42,6 +42,16 @@ public class UtilitairePaireChaineEntier {
 		return somme / listePaires.size();
 	}
 
+/**
+ * The function `indexOf` takes an ArrayList of `PaireChaineEntier` objects and a String `chaine` as parameters, and
+ * returns the index of the first occurrence of `chaine` in the ArrayList, or -1 if it is not found.
+ * 
+ * @param listePaires An ArrayList of objects of type PaireChaineEntier.
+ * @param chaine The parameter "chaine" is a String that represents the value we are searching for in the ArrayList.
+ * @return The method is returning the index of the first occurrence of the given string in the ArrayList of
+ * PaireChaineEntier objects. If the string is found, the method returns the index. If the string is not found, the method
+ * returns -1.
+ */
 	public static int indexOf(ArrayList<PaireChaineEntier> listePaires, String chaine) {
 		int i = 0;
 		while (i < listePaires.size() && listePaires.get(i).getChaine().compareTo(chaine) != 0) {

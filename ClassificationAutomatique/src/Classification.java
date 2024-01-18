@@ -227,12 +227,12 @@ public class Classification {
         // sports.initDico("./lexiques/SPORTS");
         // categories.add(sports);
         //v2
-        // final ArrayList<Categorie> categories = new ArrayList<>();
-        // categories.add(new Categorie("CULTURE", "./lexiques/CULTURE"));
-        // categories.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE"));
-        // categories.add(new Categorie("ENVIRONNEMENT-SCIENCES", "./lexiques/ENVIRONNEMENT-SCIENCES"));
-        // categories.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE"));
-        // categories.add(new Categorie("SPORTS", "./lexiques/SPORTS"));
+         final ArrayList<Categorie> categories = new ArrayList<>();
+         categories.add(new Categorie("CULTURE", "./lexiques/CULTURE"));
+         categories.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE"));
+         categories.add(new Categorie("ENVIRONNEMENT-SCIENCES", "./lexiques/ENVIRONNEMENT-SCIENCES"));
+         categories.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE"));
+         categories.add(new Categorie("SPORTS", "./lexiques/SPORTS"));
 
         //5.3
         // ArrayList<PaireChaineEntier> catt = new ArrayList<>();
@@ -245,7 +245,7 @@ public class Classification {
         // System.out.println(UtilitairePaireChaineEntier.chaineMax(catt));
 
         //5.6
-        // classementDepeches(depeches, categories, "testClassment.txt");
+         classementDepeches(depeches, categories, "testClassment.txt");
 
         //part 2 3.5
 //         generationLexique(depeches, "CULTURE", "./lexiques/CULTURE_Test.txt");
@@ -255,15 +255,15 @@ public class Classification {
 //         generationLexique(depeches, "SPORTS", "./lexiques/SPORTS_Test.txt");
 
         //test part 2 3.5
-        ArrayList<Categorie> categoriesNew = new ArrayList<>();
-        categoriesNew.add(new Categorie("CULTURE", "./lexiques/CULTURE_Test.txt"));
-        categoriesNew.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE_Test.txt"));
-        categoriesNew.add(new Categorie("ENVIRONNEMENT-SCIENCES",
-                "./lexiques/ENVIRONNEMENT-SCIENCES_Test.txt"));
-        categoriesNew.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE_Test.txt"));
-        categoriesNew.add(new Categorie("SPORTS", "./lexiques/SPORTS_Test.txt"));
-
-        classementDepeches(depeches, categoriesNew, "testClassment.txt");
+//        ArrayList<Categorie> categoriesNew = new ArrayList<>();
+//        categoriesNew.add(new Categorie("CULTURE", "./lexiques/CULTURE_Test.txt"));
+//        categoriesNew.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE_Test.txt"));
+//        categoriesNew.add(new Categorie("ENVIRONNEMENT-SCIENCES",
+//                "./lexiques/ENVIRONNEMENT-SCIENCES_Test.txt"));
+//        categoriesNew.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE_Test.txt"));
+//        categoriesNew.add(new Categorie("SPORTS", "./lexiques/SPORTS_Test.txt"));
+//
+//        classementDepeches(depeches, categoriesNew, "testClassment.txt");
         System.out.println("executé en : " + (System.currentTimeMillis() -startTime) + "ms");
     }
 

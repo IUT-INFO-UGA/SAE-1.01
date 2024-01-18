@@ -36,7 +36,7 @@ public class Categorie {
 
             while (scanner.hasNextLine()) {
                 final String ligne = scanner.nextLine();
-                final int index = ligne.indexOf(":");
+                final int index = ligne.lastIndexOf(":");
                 final String chaine = ligne.substring(0, index);
                 final int note = Integer.parseInt(ligne.substring(index + 1).trim());
                 final PaireChaineEntier paire = new PaireChaineEntier();

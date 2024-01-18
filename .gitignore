@@ -36,3 +36,4 @@ ClassificationAutomatique/lexiques/ENVIRONNEMENT-SCIENCES_Test.txt
 ClassificationAutomatique/lexiques/POLITIQUE_Test.txt
 ClassificationAutomatique/lexiques/SPORTS_Test.txt
 *.txt
+ClassificationAutomatique/fichier-sortie.txt

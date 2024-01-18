@@ -1,267 +1,254 @@
-    import java.io.*;
-    import java.util.ArrayList;
-    import java.util.Objects;
-    import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-    public class Classification {
-
+public class Classification {
     /**
-     * The function `lectureDepeches` reads a file containing news articles and returns an ArrayList of Depeche objects, where
-     * each Depeche object represents a news article with an ID, date, category, and content.
-     *
-     * @param nomFichier The parameter "nomFichier" is a String that represents the name of the file from which the method will
-     * read the data.
+     * The function "lectureDepeches" reads a file containing news articles and returns an ArrayList of Depeche objects,
+     * where each object represents a news article with an ID, date, category, and content.
+     * 
+     * @param nomFichier String that represents the name of the file from which the method will read the data.
      * @return The method is returning an ArrayList of Depeche objects.
      */
-        private static ArrayList<Depeche> lectureDepeches(String nomFichier) {
-            // creation d'un tableau de dépêches
-            final ArrayList<Depeche> depeches = new ArrayList<>();
-            try {
-                // lecture du fichier d'entrée
-                final FileInputStream file = new FileInputStream(nomFichier);
-                final Scanner scanner = new Scanner(file);
+    private static ArrayList<Depeche> lectureDepeches(String nomFichier) {
+        //creation d'un tableau de dépêches
+        final ArrayList<Depeche> depeches = new ArrayList<>();
+        try {
+            // lecture du fichier d'entrée
+            final FileInputStream file = new FileInputStream(nomFichier);
+            final Scanner scanner = new Scanner(file);
 
-                while (scanner.hasNextLine()) {
-                    String ligne = scanner.nextLine();
-                    final String id = ligne.substring(3);
+            while (scanner.hasNextLine()) {
+                String ligne = scanner.nextLine();
+                final String id = ligne.substring(3);
+                ligne = scanner.nextLine();
+                String date = ligne.substring(3);
+                ligne = scanner.nextLine();
+                String categorie = ligne.substring(3);
+                ligne = scanner.nextLine();
+                String lignes = ligne.substring(3);
+                while (scanner.hasNextLine() && !ligne.isEmpty()) {
                     ligne = scanner.nextLine();
-                    String date = ligne.substring(3);
-                    ligne = scanner.nextLine();
-                    String categorie = ligne.substring(3);
-                    ligne = scanner.nextLine();
-                    String lignes = ligne.substring(3);
-                    while (scanner.hasNextLine() && !ligne.isEmpty()) {
-                        ligne = scanner.nextLine();
-                        if (!ligne.isEmpty()) {
-                            lignes = lignes + '\n' + ligne;
-                        }
-                    }
-                    depeches.add(new Depeche(id, date, categorie, lignes));
-                }
-                scanner.close();
-            } catch (IOException e) {
-                System.out.println("Erreur lors de la lecture du fichier " + nomFichier);
-
-            }
-            return depeches;
-        }
-
-    /**
-     * The function `initDico` initializes a dictionary by iterating through a list of news articles and adding unique words
-     * from articles of a specific category to the dictionary.
-     *
-     * @param depeches An ArrayList of objects of type Depeche.
-     * @param categorie String that represents the category of the news articles.
-     * @return The method is returning an ArrayList of PaireChaineEntier objects.
-     */
-        public static SortedArray initDico(ArrayList<Depeche> depeches, String categorie) {
-            final SortedArray resultat = new SortedArray();
-            for (final Depeche depech : depeches) {
-                if (depech.getCategorie().equals(categorie)) {
-                    for (int j = 0; j < depech.getMots().size(); ++j) {
-                        if (depech.getMots().get(j).length() > 2) {
-                            if (UtilitairePaireChaineEntier.indicePourChaine(resultat, depech.getMots().get(j)) == -1)
-                                resultat.addSorted(new PaireChaineEntier(depech.getMots().get(j), 0));
-                        }
+                    if (!ligne.isEmpty()) {
+                        lignes = lignes + '\n' + ligne;
                     }
                 }
+                final Depeche uneDepeche = new Depeche(id, date, categorie, lignes);
+                depeches.add(uneDepeche);
             }
-            return resultat;
+            scanner.close();
+        } catch (IOException e) {
+            System.out.println("error during reading");
         }
-
-    /**
-     * The function `classementDepeches` calculates the category with the highest score for each article, keeps track of the
-     * number of articles detected in each category, calculates the total number of articles, and writes the results to a file.
-     *
-     * @param depeches An ArrayList of Depeche objects, representing a collection of news dispatches.
-     * @param categories An ArrayList of objects of type Categorie. Each Categorie object represents a category and has a name
-     * and a score method.
-     * @param nomFichier String that represents the name of the file where the output will be
-     * written.
-     */
-        public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories,
-                String nomFichier) {
-            try {
-                final FileWriter file = new FileWriter("fichier-sortie.txt");
-                final ArrayList<PaireChaineEntier> detected = new ArrayList<>();
-                for (int i = 0; i < depeches.size(); i++) {
-                    PaireChaineEntier max = new PaireChaineEntier("no data", -1);
-                    for (int j = 0; j < categories.size(); j++) {
-                        final PaireChaineEntier tmp = new PaireChaineEntier(categories.get(j).getNom(), categories.get(j).score(depeches.get(i)));
-                        if (tmp.getEntier() > max.getEntier()) {
-                            max = tmp;
-                        }
-                    }
-                    final PaireChaineEntier selectCat = max;
-                    file.write(+ i + " : " + selectCat.getChaine() + "\n");
-                    if (depeches.get(i).getCategorie().equals(selectCat.getChaine())) {
-                        int h = 0;
-                        while (h < detected.size() && !Objects.equals(detected.get(h).getChaine(), selectCat.getChaine())) {
-                            h++;
-                        }
-                        if (h < detected.size()) {
-                            detected.get(h).setEntier(detected.get(h).getEntier() + 1);
-                        } else {
-                            detected.add(new PaireChaineEntier(selectCat.getChaine(), 1));
-                        }
-                    }
-                }
-                    file.write("\n\n");
-                int total = 0;
-                int nbCatt = 0;
-                while (nbCatt < detected.size()) {
-                    file.write(detected.get(nbCatt).getChaine() + " : " + detected.get(nbCatt).getEntier() + "\n");
-                    if(nbCatt>0)
-                        file.write("Total : " + total / nbCatt + "\n");
-                    else
-                        file.write("Total : 0\n");
-                    total += detected.get(nbCatt).getEntier();
-                    nbCatt++;
-                }
-            } catch (IOException e) {
-                System.out.println("Erreur lors de l'écriture du fichier " + nomFichier);
-            }
-        }
-
-    /**
-     * give a score to a Depeche object based on the words it contains and the lexicon of the category it belongs to.
-     *
-     * @param depeches An ArrayList of objects of type Depeche. Each Depeche object represents a news article and contains
-     * information such as the category and the words in the article.
-     * @param categorie String that represents the category of the Depeche objects.
-     * @param dictionnaire ArrayList of type PaireChaineEntier. It is used to store pairs of strings and integers.
-     * Each pair represents a word and its corresponding count.
-     */
-        public static void calculScores(ArrayList<Depeche> depeches, String categorie, SortedArray dictionnaire) {
-            for (final Depeche depeche : depeches) {
-                for (final String mot : depeche.getMots()) {
-                    final int index = dictionnaire.indexOf(mot);
-                    if (index != -1) {
-                        if (depeche.getCategorie().equals(categorie)) {
-                            dictionnaire.set(index, dictionnaire.get(index).getEntier() +1);
-                        } else {
-                            dictionnaire.set(index, dictionnaire.get(index).getEntier() -1);
-                        }
-                    }
-                }
-            }
-        }
-
-    /**
-     * The function "poidsPourScore" returns a weight based on the input score, with different weights assigned to different
-     * score ranges.
-     *
-     * @param score The parameter "score" represents the score for which we want to calculate the weight.
-     * @return The method `poidsPourScore` returns an integer value.
-     */
-        public static int poidsPourScore(int score) {
-            if (score < 0)
-                return 0;
-            else if (score < 5)
-                return 1;
-            else if (score < 30)
-                return 2;
-            else
-                return 3;
-        }
-
-    /**
-     * The function `generationLexique` takes in a list of `Depeche` objects, a category name, and a file name, and generates a
-     * lexicon by calculating scores for each `Depeche` object and writing the lexicon to a file.
-     *
-     * @param depeches An ArrayList of objects of type "Depeche".
-     * @param categorieName String that represents the category name for which the lexicon is being generated.
-     * @param nomFichier String that represents the name of the file where the generated lexicon will be written.
-     */
-        public static void generationLexique(ArrayList<Depeche> depeches, String categorieName, String nomFichier) {
-            final SortedArray dico = initDico(depeches, categorieName);
-            calculScores(depeches, categorieName, dico);
-            for (int i = 0; i < dico.size(); ++i) {
-                final int weight = poidsPourScore(dico.get(i).getEntier());
-                if (weight > 0) {
-                    dico.get(i).setEntier(weight);
-                }
-            }
-            // Ecriture du fichier
-            try {
-                final FileOutputStream file = new FileOutputStream(nomFichier);
-                final PrintWriter pw = new PrintWriter(file);
-                for (int i = 0; i < dico.size(); ++i) {
-                    pw.println(dico.get(i).getChaine() + ":" + dico.get(i).getEntier());
-                }
-                pw.close();
-            } catch (IOException e) {
-                System.out.println("Erreur lors de l'écriture du fichier " + nomFichier);
-            }
-        }
-
-        public static void main(String[] args) {
-
-            // // Chargement des dépêches en mémoire
-            final long startTime = System.currentTimeMillis();
-            final ArrayList<Depeche> depeches = lectureDepeches("./test.txt");
-
-            // // Affichage des dépêches
-//            for (int i = 0; i < depeches.size(); i++) {
-//                depeches.get(i).afficher();
-//            }
-
-            // v1 less optimized
-            // ArrayList<Categorie> categories = new ArrayList<>();
-            // final Categorie culture = new Categorie("CULTURE");
-            // culture.initDico("./lexiques/CULTURE");
-            // categories.add(culture);
-            // final Categorie economie = new Categorie("ECONOMIE");
-            // economie.initDico("./lexiques/ECONOMIE");
-            // categories.add(economie);
-            // final Categorie environnement = new Categorie("ENVIRONNEMENT-SCIENCES");
-            // environnement.initDico("./lexiques/ENVIRONNEMENT-SCIENCES");
-            // categories.add(environnement);
-            // final Categorie politique = new Categorie("POLITIQUE");
-            // politique.initDico("./lexiques/POLITIQUE");
-            // categories.add(politique);
-            // final Categorie sports = new Categorie("SPORTS");
-            // sports.initDico("./lexiques/SPORTS");
-            // categories.add(sports);
-            //v2
-            // final ArrayList<Categorie> categories = new ArrayList<>();
-            // categories.add(new Categorie("CULTURE", "./lexiques/CULTURE"));
-            // categories.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE"));
-            // categories.add(new Categorie("ENVIRONNEMENT-SCIENCES",
-            //         "./lexiques/ENVIRONNEMENT-SCIENCES"));
-            // categories.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE"));
-            // categories.add(new Categorie("SPORTS", "./lexiques/SPORTS"));
-
-            //5.3
-            // ArrayList<PaireChaineEntier> catt = new ArrayList<>();
-            // for (int i = 0; i < depeches.size(); i++) {
-            // catt.add(new PaireChaineEntier(categories.get(2).getNom(),
-            // categories.get(2).score(depeches.get(i))));
-            // }
-
-            //5.4
-            // System.out.println(UtilitairePaireChaineEntier.chaineMax(catt));
-
-            //5.6
-            // classementDepeches(depeches, categories, "testClassment.txt");
-
-            //part 2 3.5
-            generationLexique(depeches, "CULTURE", "./lexiques/CULTURE_Test.txt");
-            generationLexique(depeches, "ECONOMIE", "./lexiques/ECONOMIE_Test.txt");
-             generationLexique(depeches, "ENVIRONNEMENT-SCIENCES","./lexiques/ENVIRONNEMENT-SCIENCES_Test.txt");
-            generationLexique(depeches, "POLITIQUE", "./lexiques/POLITIQUE_Test.txt");
-            generationLexique(depeches, "SPORTS", "./lexiques/SPORTS_Test.txt");
-
-            //test part 2 3.5
-            ArrayList<Categorie> categoriesNew = new ArrayList<>();
-            categoriesNew.add(new Categorie("CULTURE", "./lexiques/CULTURE_Test.txt"));
-            categoriesNew.add(new Categorie("ECONOMIE", "./lexiques/ECONOMIE_Test.txt"));
-            categoriesNew.add(new Categorie("ENVIRONNEMENT-SCIENCES","./lexiques/ENVIRONNEMENT-SCIENCES_Test.txt"));
-            categoriesNew.add(new Categorie("POLITIQUE", "./lexiques/POLITIQUE_Test.txt"));
-            categoriesNew.add(new Categorie("SPORTS", "./lexiques/SPORTS_Test.txt"));
-
-            classementDepeches(depeches, categoriesNew, "testClassment.txt");
-            System.out.println("classifier en " +(System.currentTimeMillis() - startTime) + "ms");
-        }
-
+        return depeches;
     }
+
+    /**
+     * The function "classementDepeches" takes in a list of news articles, a list of categories, and a file name, and
+     * writes the classification results and statistics to the specified file.
+     * 
+     * @param depeches An ArrayList of Depeche objects, which represents a collection of news dispatches.
+     * @param categories An ArrayList of objects of type Categorie. Each Categorie object represents a category for the
+     * Depeche objects.
+     * @param nomFichier String that represents the name of the file where the results will be written.
+     */
+    public static void classementDepeches(ArrayList<Depeche> depeches, ArrayList<Categorie> categories, String nomFichier) {
+
+        ArrayList<PaireChaineEntier> catResults = new ArrayList<>();
+
+        for (Categorie category : categories) {
+            catResults.add(new PaireChaineEntier(category.getNom(), 0));
+        }
+
+        try {
+            FileWriter file = new FileWriter(nomFichier);
+            for (Depeche depeche : depeches) {
+                final ArrayList<PaireChaineEntier> result = new ArrayList<>();
+                for (Categorie category : categories) {
+                    result.add(new PaireChaineEntier(category.getNom(), category.score(depeche)));
+                }
+
+                if (UtilitairePaireChaineEntier.chaineMax(result).equals(depeche.getCategorie())) {
+                    catResults.set(UtilitairePaireChaineEntier.indicePourChaine(catResults, depeche.getCategorie()),
+                            new PaireChaineEntier(depeche.getCategorie(),
+                            catResults.get(UtilitairePaireChaineEntier.indicePourChaine(catResults, depeche.getCategorie())).getEntier() + 1));
+                }
+
+                file.write(depeche.getId() + ":" + UtilitairePaireChaineEntier.chaineMax(result) + "\n");
+            }
+            file.write("\n\n");
+            int moyenne = 0;
+            for (PaireChaineEntier catResult : catResults) {
+                file.write(catResult.getChaine() + ":" + catResult.getEntier() + "%\n");
+                moyenne += catResult.getEntier();
+            }
+            file.write("MOYENNE:" + (moyenne / catResults.size()) + "%\n");
+            file.close();
+        } catch (IOException e) {
+            System.out.println("error during writing");
+        }
+    }
+
+
+    /**
+     * The function `initDico` takes in a list of `Depeche` objects and a category, and returns a sorted array containing
+     * the unique words from the `Depeche` objects in the specified category along with their frequency of occurrence.
+     * 
+     * @param depeches An ArrayList of Depeche objects.
+     * @param categorie String that represents the category of the "Depeche" objects. It is used to filter the "depeches" 
+     * ArrayList and only consider the ones that have the specified category.
+     * @return The method is returning a SortedArray object.
+     */
+    public static SortedArray initDico(ArrayList<Depeche> depeches, String categorie) {
+        SortedArray resultat = new SortedArray();
+
+        for (Depeche depeche : depeches) {
+            if (depeche.getCategorie().equals(categorie)) {
+                for (String mot : depeche.getMots()) {
+                    if (resultat.indexOf(mot) == -1) {
+                        resultat.addSorted(new PaireChaineEntier(mot, 1));
+                    } else {
+                        resultat.set(resultat.indexOf(mot), resultat.get(resultat.indexOf(mot)).getEntier() + 1);
+                    }
+                }
+            }
+        }
+
+        return resultat;
+    }
+
+/**
+ * The function calculates scores for each word in a list of news articles based on their category and updates a dictionary
+ * accordingly.
+ * 
+ * @param depeches An ArrayList of Depeche objects.
+ * @param categorie String that represents the category of the Depeche objects.
+ * @param dictionnaire SortedArray object, which is a data structure
+ * stores words and their corresponding scores. Each word in the dictionnaire has an associated score represented by an
+ * integer value.
+ */
+    public static void calculScores(ArrayList<Depeche> depeches, String categorie, SortedArray dictionnaire) {
+        for (Depeche depeche : depeches) {
+            for (String mot : depeche.getMots()) {
+                if (dictionnaire.indexOf(mot) != -1) {
+                    if (depeche.getCategorie().equals(categorie)) {
+                        dictionnaire.set(dictionnaire.indexOf(mot), dictionnaire.get(mot).getEntier() + 1);
+                    } else {
+                        dictionnaire.set(dictionnaire.indexOf(mot), dictionnaire.get(mot).getEntier() - 1);
+                    }
+                }
+            }
+        }
+    }
+
+/**
+ * The function "poidsPourScore" returns a weight value based on the input score, with higher scores resulting in higher
+ * weights.
+ * 
+ * @param score The parameter "score" represents a numerical value that is used to determine the weight or importance of
+ * the data. The function "poidsPourScore" calculates and returns a weight value based on the given score.
+ * @return The method `poidsPourScore` returns an integer value. The value returned depends on the input `score`. If
+ * `score` is less than 5, the method returns 1. If `score` is between 5 and 15 (exclusive), the method returns 2.
+ * Otherwise, if `score` is greater than or equal to 15, the method returns 3.
+ */
+    public static int poidsPourScore(int score) {
+        // This defines the disparity of the model data
+        // More the two values are far from each other, more the data will be generalized
+        if (score < 5) {
+            return 1;
+        } else if (score < 15 ) {
+            return 2;
+        }
+        return 3;
+    }
+
+/**
+ * The function `cleanString` takes a string as input and removes certain characters from it, returning an empty string if
+ * the resulting string is either "-" or "'", or if the length of the resulting string is less than or equal to 2.
+ * 
+ * @param string The parameter "string" is a string that needs to be cleaned.
+ * @return The method returns the cleaned string.
+ */
+    private static String cleanString(String string) {
+        string = string.replaceAll(":", "");
+        if (string.equals("-")) {
+            return "";
+        } else if (string.equals("'")) {
+            return "";
+        } else if (string.equals("%")) {
+            return "";
+        } else if (string.length() <= 2) {
+            return "";
+        }
+        return string;
+    }
+
+    /**
+     * The function `generationLexique` takes in a list of `Depeche` objects, a category, and a filename, and generates a
+     * lexicon by calculating scores for each word in the dataset and writing them to the specified file.
+     * 
+     * @param depeches An ArrayList of objects of type "Depeche". It contains the depeches (news articles) that will be
+     * used to generate the lexique (dictionary).
+     * @param categorie The parameter "categorie" is a string that represents the category of the data. It is used to
+     * filter the data and perform calculations specific to that category.
+     * @param nomFichier The parameter "nomFichier" is a String that represents the name of the file where the generated
+     * lexicon will be saved.
+     */
+    public static void generationLexique(ArrayList<Depeche> depeches, String categorie, String nomFichier) {
+        final SortedArray dictionnaire = initDico(depeches, categorie);
+
+        // The following is the model searching depth. The higher it is, better the result will be
+        // In our dataset, it starts to crunch the data at 5
+       final int depth = 5;
+        for (int i = 0; i < depth; i++) {
+            calculScores(depeches, categorie, dictionnaire);
+        }
+        try {
+            final FileWriter file = new FileWriter(nomFichier);
+            for (PaireChaineEntier paireChaineEntier : dictionnaire.getArray()) {
+                if (!cleanString(paireChaineEntier.getChaine()).isEmpty()) {
+                    file.write(cleanString(paireChaineEntier.getChaine()) + ":" + poidsPourScore(paireChaineEntier.getEntier()) + "\n");
+                }
+            }
+            file.close();
+        } catch (IOException e) {
+            System.out.println("error during writing");
+        }
+    }
+
+    public static void main(String[] args) {
+        final long totalStartTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
+        final ArrayList<Depeche> depeches = lectureDepeches("./depeches.txt");
+        final ArrayList<Categorie> categories = new ArrayList<>();
+        System.out.println("Depeches loaded in " + (System.currentTimeMillis()-startTime) + "ms");
+
+        startTime = System.currentTimeMillis();
+        generationLexique(depeches, "ECONOMIE", "economie_knn.txt");
+        generationLexique(depeches, "POLITIQUE", "politique_knn.txt");
+        generationLexique(depeches, "CULTURE", "culture_knn.txt");
+        generationLexique(depeches, "ENVIRONNEMENT-SCIENCES", "environnement-sciences_knn.txt");
+        generationLexique(depeches, "SPORTS", "sports_knn.txt");
+        System.out.println("Lexiques generated in " + (System.currentTimeMillis()-startTime) + "ms");
+
+        startTime = System.currentTimeMillis();
+        categories.add(new Categorie("ECONOMIE", "economie_knn.txt"));
+        categories.add(new Categorie("POLITIQUE", "politique_knn.txt"));
+        categories.add(new Categorie("CULTURE", "culture_knn.txt"));
+        categories.add(new Categorie("ENVIRONNEMENT-SCIENCES", "environnement-sciences_knn.txt"));
+        categories.add(new Categorie("SPORTS", "sports_knn.txt"));
+        System.out.println("Lexiques loaded in " + (System.currentTimeMillis()-startTime) + "ms");
+
+        startTime = System.currentTimeMillis();
+        classementDepeches(depeches, categories, "output_depeche.txt");
+        final ArrayList<Depeche> depeches2 = lectureDepeches("./test.txt");
+        classementDepeches(depeches2, categories, "output_test.txt");
+        System.out.println("Depeches processed in " + (System.currentTimeMillis()-startTime) + "ms");
+
+        long totalEndTime = System.currentTimeMillis();
+        System.out.println("\nTotal execution time: " + (totalEndTime-totalStartTime) + "ms");
+    }
+}
+

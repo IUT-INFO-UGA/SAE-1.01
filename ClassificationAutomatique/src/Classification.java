@@ -202,7 +202,7 @@ public class Classification {
 
         //Chargement des dépêches en mémoire
         final long startTime = System.currentTimeMillis();
-        final ArrayList<Depeche> depeches = lectureDepeches("./depeches.txt");
+        final ArrayList<Depeche> depeches = lectureDepeches("./test.txt");
 
         // Affichage des dépêches
         // for (int i = 0; i < depeches.size(); i++) {

@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Categorie {
 
     final private String nom;
-    private SortedArray lexique;
+    private ArrayList<PaireChaineEntier> lexique;
 
     public Categorie(String nom) {
         this.nom = nom;
@@ -23,10 +23,6 @@ public class Categorie {
     }
 
 
-    public  SortedArray getLexique() {
-        return lexique;
-    }
-
 /**
  * The function "initLexique" initializes a SortedArray object by reading data from a file and adding it to the array in
  * sorted order.
@@ -35,15 +31,15 @@ public class Categorie {
  * (vocabulary) will be initialized.
  */
     public void initLexique(String nomFichier) {
-        this.lexique = new SortedArray();
+        this.lexique = new ArrayList<>();
         try {
             final FileInputStream file = new FileInputStream(nomFichier);
             final Scanner scanner = new Scanner(file);
             String ligne = scanner.nextLine();
-            this.lexique.addSorted(new PaireChaineEntier(ligne.split(":")[0], Integer.parseInt(ligne.split(":")[1])));
+            this.lexique.add(new PaireChaineEntier(ligne.split(":")[0], Integer.parseInt(ligne.split(":")[1])));
             do {
                 ligne = scanner.nextLine();
-                this.lexique.addSorted(new PaireChaineEntier(ligne.split(":")[0], Integer.parseInt(ligne.split(":")[1])));
+                this.lexique.add(new PaireChaineEntier(ligne.split(":")[0], Integer.parseInt(ligne.split(":")[1])));
             } while (scanner.hasNextLine());
             scanner.close();
         } catch (IOException e) {
@@ -56,9 +52,9 @@ public class Categorie {
 // `Depeche` object. 
     public int score(Depeche d) {
         int score = 0;
-        for (String mot : d.getMots()) {
+        for (int i =0; i<d.getMots().size(); i++) {
             try {
-                score += this.lexique.get(mot).getEntier();
+                score += this.lexique.get(i).getEntier();
             } catch (ArrayIndexOutOfBoundsException ignored) { }
         }
         return score;

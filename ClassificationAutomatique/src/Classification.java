@@ -101,16 +101,17 @@ public class Classification {
      * ArrayList and only consider the ones that have the specified category.
      * @return The method is returning a SortedArray object.
      */
-    public static SortedArray initDico(ArrayList<Depeche> depeches, String categorie) {
-        SortedArray resultat = new SortedArray();
+    public static ArrayList<PaireChaineEntier> initDico(ArrayList<Depeche> depeches, String categorie) {
+        ArrayList<PaireChaineEntier> resultat = new ArrayList<>();
 
         for (Depeche depeche : depeches) {
             if (depeche.getCategorie().equals(categorie)) {
                 for (String mot : depeche.getMots()) {
-                    if (resultat.indexOf(mot) == -1) {
-                        resultat.addSorted(new PaireChaineEntier(mot, 1));
+                    final int index =UtilitairePaireChaineEntier.indexOf(resultat, mot);
+                    if (index == -1 || index >= resultat.size()) {
+                        resultat.add(new PaireChaineEntier(mot, 1));
                     } else {
-                        resultat.set(resultat.indexOf(mot), resultat.get(resultat.indexOf(mot)).getEntier() + 1);
+                        resultat.set(index, new PaireChaineEntier(resultat.get(index).getChaine(),resultat.get(index).getEntier() + 1));
                     }
                 }
             }
@@ -129,14 +130,15 @@ public class Classification {
  * stores words and their corresponding scores. Each word in the dictionnaire has an associated score represented by an
  * integer value.
  */
-    public static void calculScores(ArrayList<Depeche> depeches, String categorie, SortedArray dictionnaire) {
+    public static void calculScores(ArrayList<Depeche> depeches, String categorie, ArrayList<PaireChaineEntier> dictionnaire) {
         for (Depeche depeche : depeches) {
             for (String mot : depeche.getMots()) {
-                if (dictionnaire.indexOf(mot) != -1) {
+                final int index =UtilitairePaireChaineEntier.indexOf(dictionnaire, mot);
+                if (index != -1 && !(index >= dictionnaire.size())) {
                     if (depeche.getCategorie().equals(categorie)) {
-                        dictionnaire.set(dictionnaire.indexOf(mot), dictionnaire.get(mot).getEntier() + 1);
+                        dictionnaire.set(index, new PaireChaineEntier(dictionnaire.get(index).getChaine(),dictionnaire.get(index).getEntier() + 5));
                     } else {
-                        dictionnaire.set(dictionnaire.indexOf(mot), dictionnaire.get(mot).getEntier() - 1);
+                        dictionnaire.set(index, new PaireChaineEntier(dictionnaire.get(index).getChaine(),dictionnaire.get(index).getEntier() - 5));
                     }
                 }
             }
@@ -197,17 +199,12 @@ public class Classification {
      * lexicon will be saved.
      */
     public static void generationLexique(ArrayList<Depeche> depeches, String categorie, String nomFichier) {
-        final SortedArray dictionnaire = initDico(depeches, categorie);
+        final ArrayList<PaireChaineEntier> dictionnaire = initDico(depeches, categorie);
 
-        // The following is the model searching depth. The higher it is, better the result will be
-        // In our dataset, it starts to crunch the data at 5
-       final int depth = 5;
-        for (int i = 0; i < depth; i++) {
-            calculScores(depeches, categorie, dictionnaire);
-        }
+        calculScores(depeches, categorie, dictionnaire);
         try {
             final FileWriter file = new FileWriter(nomFichier);
-            for (PaireChaineEntier paireChaineEntier : dictionnaire.getArray()) {
+            for (PaireChaineEntier paireChaineEntier : dictionnaire) {
                 if (!cleanString(paireChaineEntier.getChaine()).isEmpty()) {
                     file.write(cleanString(paireChaineEntier.getChaine()) + ":" + poidsPourScore(paireChaineEntier.getEntier()) + "\n");
                 }
